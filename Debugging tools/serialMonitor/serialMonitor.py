@@ -18,7 +18,8 @@ class SerialMonitor():
 
     def getFloatFromComPort(self):
         serialData = self.getLineFromComPort()
-        return float(serialData)
+        floatVal = re.compile(r'[^\d.]+')
+        return float(floatVal.sub('', serialData))
 
     def getLineFromComPort(self):
         line = ''
@@ -52,7 +53,7 @@ class SerialMonitor():
     def sendBytesToComPort(self, bytesToSend):
         self.serialConnection.write(bytesToSend)
 
-
+'''
 if __name__ == "__main__":
     comPort = "/dev/ttyACM0"
     newMonitor = SerialMonitor(comPort)
@@ -60,3 +61,4 @@ if __name__ == "__main__":
         userInput = input(">>")
         newMonitor.sendStringToComPort(userInput + "\n")
         newMonitor.displaySerialMonitor()
+'''
