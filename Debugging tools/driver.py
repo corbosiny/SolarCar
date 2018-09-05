@@ -10,8 +10,8 @@ if __name__ == "__main__":
   app = QApplication(sys.argv)
   serialMonitorInterface = SerialMonitorInterface()
 
-  #comPort = "/dev/ttyACM0"
-  #serialMonitor = SerialMonitor(comPort)
-  #serialMonitorInterface.assignMonitor(serialMonitor)
+  comPort = "/dev/ttyACM0"
+  serialMonitor = SerialMonitor(comPort)
+  serialMonitorInterface.assignMonitor(serialMonitor)
   
   sys.exit(app.exec())
