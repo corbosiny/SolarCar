@@ -25,13 +25,13 @@ class SerialMonitorInterface(QWidget):
     # Initialize Combobox
     self.combobox = QComboBox()
     self.combobox.addItem("Get Input Voltage")
-    self.combobox.addItem("Get Input Current")
-    self.combobox.addItem("Get Input Power")
     self.combobox.addItem("Get Output Voltage")
+    self.combobox.addItem("Get Input Current")
     self.combobox.addItem("Get Output Current")
+    self.combobox.addItem("Get Input Power")
     self.combobox.addItem("Get Output Power")
-    self.combobox.addItem("Get Duty Cycle")
     self.combobox.addItem("Get Effective Power")
+    self.combobox.addItem("Get Duty Cycle")
 
     self.combobox.currentTextChanged.connect(self.combobox_changed)
     layout.addWidget(self.combobox)
@@ -91,17 +91,19 @@ class SerialMonitorInterface(QWidget):
     # Convert text to board expected values
     text = self.combobox.currentText()
     if text == "Get Input Voltage":
-      command = "Vin\n"
-    elif text == "Get Input Current":
-      command = "Iin\n"
+      command = "VoltageIn\n"
     elif text == "Get Output Voltage":
-      command = "Vout\n"
+      command = "VoltageOut\n"
+    elif text == "Get Input Current":
+      command = "CurrentIn\n"
     elif text == "Get Output Current":
-      command = "Iout\n"
+      command = "CurrentOut\n"
     elif text == "Get Input Power":
-      command = "Pin\n"
+      command = "PowerIn\n"
     elif text == "Get Output Power":
-      command = "Pout\n"
+      command = "PowerOut\n"
+    elif text == "Get Duty Cycle":
+      command = "DutyCycle\n"
     else:
       self.appendDebugOutput("Error: Unsupported option \"" + text + "\"\n")
       return
