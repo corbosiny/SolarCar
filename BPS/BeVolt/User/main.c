@@ -64,3 +64,21 @@ int UARTTestmain(){
 		for(uint32_t i = 0; i < 100000; i++);
 	}
 }
+
+#include <stdio.h>
+#include <string.h>
+#include "ADC.h"
+int main() {
+	char str[100];
+	UART3_Init(9600);
+	ADC_Initialize();
+	while(1) {
+		uint16_t low = ADC_ReadLowPrecision();
+		uint16_t high = ADC_ReadHighPrecision();
+		sprintf(str, "%d\t%d\n", low, high);
+		UART3_Write(str, strlen(str));
+		for(int i = 0; i < 100000000; i++) {}
+	}
+	
+}
+	
