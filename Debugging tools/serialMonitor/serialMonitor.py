@@ -3,6 +3,7 @@
 import sys
 import re
 import serial
+from threading import Lock
 
 class SerialMonitor():
 
@@ -10,6 +11,8 @@ class SerialMonitor():
         self.comPort = comPort
         self.baudRate = baudRate
         self.serialConnection = serial.Serial(comPort, baudRate)
+        self.outboundLock = Lock()
+        self.inboundLock = Lock()
 
     def displaySerialMonitor(self):
         if self.dataIsAvailable:
@@ -26,11 +29,13 @@ class SerialMonitor():
         return float(floatVal.sub('', serialData))
 
     def getLineFromComPort(self):
+        self.inboundLock.acquire()
         line = ''
         lastCharReceived = ''
         while '\n' not in lastCharReceived:
             lastCharReceived = self.getCharFromComPort()
             line += lastCharReceived
+        self.inboundLock.release()
 
         return line
 
@@ -52,7 +57,9 @@ class SerialMonitor():
         self.sendStringToComPort(numAsString)
 
     def sendStringToComPort(self, message):
+        self.outboundLock.acquire()
         self.sendBytesToComPort(message.encode('utf-8'))
+        self.outboundLock.release()
 
     def sendBytesToComPort(self, bytesToSend):
         self.serialConnection.write(bytesToSend)

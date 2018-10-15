@@ -4,6 +4,10 @@
 import sys
 import time
 import datetime
+import re
+import matplotlib.pyplot as plot
+
+from threading import Thread
 
 from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QGridLayout, QPushButton, QTextEdit
 from PyQt5.QtGui import QTextCursor
@@ -13,6 +17,55 @@ class SerialMonitorInterface(QWidget):
   def __init__(self):
     super().__init__()
     self.initUI()
+    self.monitorThreads = dict()
+    self.commands = dict({
+      "Get Input Voltage": "VoltageIn\n",
+      "Get Output Voltage": "VoltageOut\n",
+      "Get Input Current": "CurrentIn\n",
+      "Get Output Current": "CurrentOut\n",
+      "Get Input Power": "PowerIn\n",
+      "Get Output Power": "PowerOut\n",
+      "Get Duty Cycle": "DutyCycle\n"
+    })
+    self.varTrackers = dict({
+      "Get Input Voltage": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      },
+      "Get Output Voltage": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      },
+      "Get Input Current": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      },
+      "Get Output Current": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      },
+      "Get Input Power": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      },
+      "Get Output Power": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      },
+      "Get Duty Cycle": {
+        'monitorActive': False,
+        'time': [],
+        'vals': []
+      }
+    })
+    self.time = []
+    self.vals = []
 
   def assignMonitor(self, serialMonitor):
     self.serialMonitor = serialMonitor
@@ -50,6 +103,21 @@ class SerialMonitorInterface(QWidget):
     requestButton.clicked.connect(self.onRequestButtonClicked)
     layout.addWidget(requestButton)
 
+    # Initialize periodic poll button
+    periodicPollButton = QPushButton("Periodically poll board")
+    periodicPollButton.clicked.connect(self.onPeriodicPollButtonClicked)
+    layout.addWidget(periodicPollButton)
+
+    # Initialize stop monitoring button
+    stopMonitorButton = QPushButton("Stop monitoring")
+    stopMonitorButton.clicked.connect(self.onStopMonitorButtonClicked)
+    layout.addWidget(stopMonitorButton)
+
+    # Initialize plot button
+    plotButton = QPushButton("Plot data")
+    plotButton.clicked.connect(self.onPlotButtonClicked)
+    layout.addWidget(plotButton)
+
     # Initialize clear button
     clearButton = QPushButton("Clear responses")
     clearButton.clicked.connect(self.onClearButtonClicked)
@@ -77,38 +145,59 @@ class SerialMonitorInterface(QWidget):
     sb = self.monitorOutput.verticalScrollBar()
     sb.setValue(sb.maximum())
 
+    if "Voltage In" in response:
+        self.time.append(timestamp)
+        self.vals.append(int(re.sub('[^0-9]','', response)))
+
   def onClearButtonClicked(self):
     self.monitorOutput.clear()
 
-  '''
-  On trigger of button pressed
-  '''
-  def onRequestButtonClicked(self):
+  def sendAndReceive(self, text):
     if self.serialMonitor is None:
       self.appendDebugOutput("Error: No SerialMonitor instance\n")
       return
 
     # Convert text to board expected values
-    text = self.combobox.currentText()
-    if text == "Get Input Voltage":
-      command = "VoltageIn\n"
-    elif text == "Get Output Voltage":
-      command = "VoltageOut\n"
-    elif text == "Get Input Current":
-      command = "CurrentIn\n"
-    elif text == "Get Output Current":
-      command = "CurrentOut\n"
-    elif text == "Get Input Power":
-      command = "PowerIn\n"
-    elif text == "Get Output Power":
-      command = "PowerOut\n"
-    elif text == "Get Duty Cycle":
-      command = "DutyCycle\n"
+    if text in self.commands:
+      command = self.commands[text]
+      self.serialMonitor.sendStringToComPort(command)
+      response = self.serialMonitor.getLineFromComPort()
+      self.appendDebugOutput(response)
     else:
       self.appendDebugOutput("Error: Unsupported option \"" + text + "\"\n")
       return
-    
-    # Ship request to board and print the response if possible
-    self.serialMonitor.sendStringToComPort(command)
-    response = self.serialMonitor.getLineFromComPort()
-    self.appendDebugOutput(response)
+
+  '''
+  On trigger of button pressed
+  '''
+  def onRequestButtonClicked(self):
+    text = self.combobox.currentText()
+    self.sendAndReceive(text)
+
+  def onPeriodicPollButtonClicked(self):
+    print("Poll pressed")
+    text = self.combobox.currentText()
+    self.varTrackers[text]['monitorActive'] = True
+    Thread(
+      target=self.periodicPoll,
+      args=[text, 3]
+    ).start()
+
+  def onStopMonitorButtonClicked(self):
+    text = self.combobox.currentText()
+    self.varTrackers[text]['monitorActive'] = False
+
+  def onPlotButtonClicked(self):
+    plot.plot(self.time[-10:], self.vals[-10:])
+    plot.gcf().autofmt_xdate()
+    plot.show()
+
+  '''
+  Periodically request the power
+  '''
+  def periodicPoll(self, command, timeInterval):
+    print(self.varTrackers[command])
+    while (self.varTrackers[command]['monitorActive']):
+      time.sleep(timeInterval)
+      self.sendAndReceive(command)
+    return
