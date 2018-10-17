@@ -18,6 +18,15 @@ class SerialMonitorInterface(QWidget):
     super().__init__()
     self.initUI()
     self.monitorThreads = dict()
+    self.outputMapping = dict({
+      "Voltage In": "Get Input Voltage",
+      "Voltage Out": "Get Output Voltage",
+      "Current In": "Get Input Current",
+      "Current Out": "Get Output Current",
+      "Power In": "Get Input Power",
+      "Power Out": "Get Output Power",
+      "Duty Cycle": "Get Duty Cycle"
+    })
     self.commands = dict({
       "Get Input Voltage": "VoltageIn\n",
       "Get Output Voltage": "VoltageOut\n",
@@ -145,9 +154,9 @@ class SerialMonitorInterface(QWidget):
     sb = self.monitorOutput.verticalScrollBar()
     sb.setValue(sb.maximum())
 
-    if "Voltage In" in response:
-        self.time.append(timestamp)
-        self.vals.append(int(re.sub('[^0-9]','', response)))
+    outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response)[:-3]]
+    self.varTrackers[outputMap]['time'].append(timestamp)
+    self.varTrackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
 
   def onClearButtonClicked(self):
     self.monitorOutput.clear()
@@ -188,7 +197,11 @@ class SerialMonitorInterface(QWidget):
     self.varTrackers[text]['monitorActive'] = False
 
   def onPlotButtonClicked(self):
-    plot.plot(self.time[-10:], self.vals[-10:])
+    text = self.combobox.currentText()
+    plot.plot(
+      self.varTrackers[text]['time'][-10:],
+      self.varTrackers[text]['vals'][-10:]
+    )
     plot.gcf().autofmt_xdate()
     plot.show()
 
