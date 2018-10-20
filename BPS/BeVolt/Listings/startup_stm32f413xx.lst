@@ -1,7 +1,7 @@
 
 
 
-ARM Macro Assembler    Page 1 
+ARM Macro Assembler    Page 1
 
 
     1 00000000         ;******************** (C) COPYRIGHT 2017 STMicroelectron
@@ -9,7 +9,7 @@ ARM Macro Assembler    Page 1
     2 00000000         ;* File Name          : startup_stm32f413xx.s
     3 00000000         ;* Author             : MCD Application Team
     4 00000000         ;* Description        : STM32F413xx devices vector table
-                        for MDK-ARM toolchain. 
+                        for MDK-ARM toolchain.
     5 00000000         ;*                      This module performs:
     6 00000000         ;*                      - Set the initial SP
     7 00000000         ;*                      - Set the initial PC == Reset_Ha
@@ -21,15 +21,15 @@ ARM Macro Assembler    Page 1
    10 00000000         ;*                        calls main()).
    11 00000000         ;*                      After Reset the CortexM4 process
                        or is in Thread mode,
-   12 00000000         ;*                      priority is Privileged, and the 
+   12 00000000         ;*                      priority is Privileged, and the
                        Stack is set to Main.
-   13 00000000         ;* <<< Use Configuration Wizard in Context Menu >>>   
+   13 00000000         ;* <<< Use Configuration Wizard in Context Menu >>>
    14 00000000         ;*******************************************************
                        ************************
-   15 00000000         ; 
+   15 00000000         ;
    16 00000000         ;* Redistribution and use in source and binary forms, wi
                        th or without modification,
-   17 00000000         ;* are permitted provided that the following conditions 
+   17 00000000         ;* are permitted provided that the following conditions
                        are met:
    18 00000000         ;*   1. Redistributions of source code must retain the a
                        bove copyright notice,
@@ -59,85 +59,85 @@ ARM Macro Assembler    Page 1
                        ARY, OR CONSEQUENTIAL
    32 00000000         ;* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT O
                        F SUBSTITUTE GOODS OR
-   33 00000000         ;* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+   33 00000000         ;* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
                        INTERRUPTION) HOWEVER
    34 00000000         ;* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CON
                        TRACT, STRICT LIABILITY,
 
 
 
-ARM Macro Assembler    Page 2 
+ARM Macro Assembler    Page 2
 
 
    35 00000000         ;* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING I
                        N ANY WAY OUT OF THE USE
-   36 00000000         ;* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+   36 00000000         ;* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
                        OF SUCH DAMAGE.
-   37 00000000         ; 
+   37 00000000         ;
    38 00000000         ;*******************************************************
                        ************************
-   39 00000000         
+   39 00000000
    40 00000000         ; Amount of memory (in bytes) allocated for Stack
    41 00000000         ; Tailor this value to your application needs
    42 00000000         ; <h> Stack Configuration
    43 00000000         ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
    44 00000000         ; </h>
-   45 00000000         
-   46 00000000 00000400 
+   45 00000000
+   46 00000000 00000400
                        Stack_Size
                                EQU              0x00000400
-   47 00000000         
+   47 00000000
    48 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
 =3
    49 00000000         Stack_Mem
                                SPACE            Stack_Size
    50 00000400         __initial_sp
-   51 00000400         
-   52 00000400         
+   51 00000400
+   52 00000400
    53 00000400         ; <h> Heap Configuration
    54 00000400         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
    55 00000400         ; </h>
-   56 00000400         
-   57 00000400 00000200 
+   56 00000400
+   57 00000400 00000200
                        Heap_Size
                                EQU              0x00000200
-   58 00000400         
+   58 00000400
    59 00000400                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
 3
    60 00000000         __heap_base
    61 00000000         Heap_Mem
                                SPACE            Heap_Size
    62 00000200         __heap_limit
-   63 00000200         
+   63 00000200
    64 00000200                 PRESERVE8
    65 00000200                 THUMB
-   66 00000200         
-   67 00000200         
+   66 00000200
+   67 00000200
    68 00000200         ; Vector Table Mapped to Address 0 at Reset
    69 00000200                 AREA             RESET, DATA, READONLY
    70 00000000                 EXPORT           __Vectors
    71 00000000                 EXPORT           __Vectors_End
    72 00000000                 EXPORT           __Vectors_Size
-   73 00000000         
-   74 00000000 00000000 
+   73 00000000
+   74 00000000 00000000
                        __Vectors
                                DCD              __initial_sp ; Top of Stack
    75 00000004 00000000        DCD              Reset_Handler ; Reset Handler
    76 00000008 00000000        DCD              NMI_Handler ; NMI Handler
-   77 0000000C 00000000        DCD              HardFault_Handler ; Hard Fault 
+   77 0000000C 00000000        DCD              HardFault_Handler ; Hard Fault
                                                             Handler
-   78 00000010 00000000        DCD              MemManage_Handler 
+   78 00000010 00000000        DCD              MemManage_Handler
                                                             ; MPU Fault Handler
 
 
 
-ARM Macro Assembler    Page 3 
+ARM Macro Assembler    Page 3
 
 
-                                                            
-   79 00000014 00000000        DCD              BusFault_Handler 
+
+   79 00000014 00000000        DCD              BusFault_Handler
                                                             ; Bus Fault Handler
-                                                            
+
    80 00000018 00000000        DCD              UsageFault_Handler ; Usage Faul
                                                             t Handler
    81 0000001C 00000000        DCD              0           ; Reserved
@@ -149,20 +149,20 @@ ARM Macro Assembler    Page 3
                                                             r Handler
    87 00000034 00000000        DCD              0           ; Reserved
    88 00000038 00000000        DCD              PendSV_Handler ; PendSV Handler
-                                                            
-   89 0000003C 00000000        DCD              SysTick_Handler 
+
+   89 0000003C 00000000        DCD              SysTick_Handler
                                                             ; SysTick Handler
-   90 00000040         
+   90 00000040
    91 00000040         ; External Interrupts
-   92 00000040 00000000        DCD              WWDG_IRQHandler 
+   92 00000040 00000000        DCD              WWDG_IRQHandler
                                                             ; Window WatchDog
    93 00000044 00000000        DCD              PVD_IRQHandler ; PVD through EX
                                                             TI Line detection
-   94 00000048 00000000        DCD              TAMP_STAMP_IRQHandler ; Tamper 
+   94 00000048 00000000        DCD              TAMP_STAMP_IRQHandler ; Tamper
                                                             and TimeStamps thro
                                                             ugh the EXTI line
    95 0000004C 00000000        DCD              RTC_WKUP_IRQHandler ; RTC Wakeu
-                                                            p through the EXTI 
+                                                            p through the EXTI
                                                             line
    96 00000050 00000000        DCD              FLASH_IRQHandler ; FLASH
    97 00000054 00000000        DCD              RCC_IRQHandler ; RCC
@@ -171,19 +171,19 @@ ARM Macro Assembler    Page 3
   100 00000060 00000000        DCD              EXTI2_IRQHandler ; EXTI Line2
   101 00000064 00000000        DCD              EXTI3_IRQHandler ; EXTI Line3
   102 00000068 00000000        DCD              EXTI4_IRQHandler ; EXTI Line4
-  103 0000006C 00000000        DCD              DMA1_Stream0_IRQHandler 
+  103 0000006C 00000000        DCD              DMA1_Stream0_IRQHandler
                                                             ; DMA1 Stream 0
-  104 00000070 00000000        DCD              DMA1_Stream1_IRQHandler 
+  104 00000070 00000000        DCD              DMA1_Stream1_IRQHandler
                                                             ; DMA1 Stream 1
-  105 00000074 00000000        DCD              DMA1_Stream2_IRQHandler 
+  105 00000074 00000000        DCD              DMA1_Stream2_IRQHandler
                                                             ; DMA1 Stream 2
-  106 00000078 00000000        DCD              DMA1_Stream3_IRQHandler 
+  106 00000078 00000000        DCD              DMA1_Stream3_IRQHandler
                                                             ; DMA1 Stream 3
-  107 0000007C 00000000        DCD              DMA1_Stream4_IRQHandler 
+  107 0000007C 00000000        DCD              DMA1_Stream4_IRQHandler
                                                             ; DMA1 Stream 4
-  108 00000080 00000000        DCD              DMA1_Stream5_IRQHandler 
+  108 00000080 00000000        DCD              DMA1_Stream5_IRQHandler
                                                             ; DMA1 Stream 5
-  109 00000084 00000000        DCD              DMA1_Stream6_IRQHandler 
+  109 00000084 00000000        DCD              DMA1_Stream6_IRQHandler
                                                             ; DMA1 Stream 6
   110 00000088 00000000        DCD              ADC_IRQHandler ; ADC1, ADC2 and
                                                              ADC3s
@@ -196,7 +196,7 @@ ARM Macro Assembler    Page 3
 
 
 
-ARM Macro Assembler    Page 4 
+ARM Macro Assembler    Page 4
 
 
   116 000000A0 00000000        DCD              TIM1_BRK_TIM9_IRQHandler ; TIM1
@@ -213,13 +213,13 @@ ARM Macro Assembler    Page 4
   121 000000B4 00000000        DCD              TIM3_IRQHandler ; TIM3
   122 000000B8 00000000        DCD              TIM4_IRQHandler ; TIM4
   123 000000BC 00000000        DCD              I2C1_EV_IRQHandler ; I2C1 Event
-                                                            
+
   124 000000C0 00000000        DCD              I2C1_ER_IRQHandler ; I2C1 Error
-                                                            
+
   125 000000C4 00000000        DCD              I2C2_EV_IRQHandler ; I2C2 Event
-                                                            
+
   126 000000C8 00000000        DCD              I2C2_ER_IRQHandler ; I2C2 Error
-                                                            
+
   127 000000CC 00000000        DCD              SPI1_IRQHandler ; SPI1
   128 000000D0 00000000        DCD              SPI2_IRQHandler ; SPI2
   129 000000D4 00000000        DCD              USART1_IRQHandler ; USART1
@@ -243,7 +243,7 @@ ARM Macro Assembler    Page 4
                                                             4
   138 000000F8 00000000        DCD              TIM8_CC_IRQHandler ; TIM8 Captu
                                                             re Compare
-  139 000000FC 00000000        DCD              DMA1_Stream7_IRQHandler 
+  139 000000FC 00000000        DCD              DMA1_Stream7_IRQHandler
                                                             ; DMA1 Stream7
   140 00000100 00000000        DCD              FSMC_IRQHandler ; FSMC
   141 00000104 00000000        DCD              SDIO_IRQHandler ; SDIO
@@ -254,21 +254,21 @@ ARM Macro Assembler    Page 4
   146 00000118 00000000        DCD              TIM6_DAC_IRQHandler ; TIM6, DAC
                                                             1 and DAC2
   147 0000011C 00000000        DCD              TIM7_IRQHandler ; TIM7
-  148 00000120 00000000        DCD              DMA2_Stream0_IRQHandler 
+  148 00000120 00000000        DCD              DMA2_Stream0_IRQHandler
                                                             ; DMA2 Stream 0
-  149 00000124 00000000        DCD              DMA2_Stream1_IRQHandler 
+  149 00000124 00000000        DCD              DMA2_Stream1_IRQHandler
                                                             ; DMA2 Stream 1
 
 
 
-ARM Macro Assembler    Page 5 
+ARM Macro Assembler    Page 5
 
 
-  150 00000128 00000000        DCD              DMA2_Stream2_IRQHandler 
+  150 00000128 00000000        DCD              DMA2_Stream2_IRQHandler
                                                             ; DMA2 Stream 2
-  151 0000012C 00000000        DCD              DMA2_Stream3_IRQHandler 
+  151 0000012C 00000000        DCD              DMA2_Stream3_IRQHandler
                                                             ; DMA2 Stream 3
-  152 00000130 00000000        DCD              DMA2_Stream4_IRQHandler 
+  152 00000130 00000000        DCD              DMA2_Stream4_IRQHandler
                                                             ; DMA2 Stream 4
   153 00000134 00000000        DCD              DFSDM1_FLT0_IRQHandler ; DFSDM1
                                                              Filter 0 global in
@@ -281,17 +281,17 @@ ARM Macro Assembler    Page 5
   157 00000144 00000000        DCD              CAN2_RX1_IRQHandler ; CAN2 RX1
   158 00000148 00000000        DCD              CAN2_SCE_IRQHandler ; CAN2 SCE
   159 0000014C 00000000        DCD              OTG_FS_IRQHandler ; USB OTG FS
-  160 00000150 00000000        DCD              DMA2_Stream5_IRQHandler 
+  160 00000150 00000000        DCD              DMA2_Stream5_IRQHandler
                                                             ; DMA2 Stream 5
-  161 00000154 00000000        DCD              DMA2_Stream6_IRQHandler 
+  161 00000154 00000000        DCD              DMA2_Stream6_IRQHandler
                                                             ; DMA2 Stream 6
-  162 00000158 00000000        DCD              DMA2_Stream7_IRQHandler 
+  162 00000158 00000000        DCD              DMA2_Stream7_IRQHandler
                                                             ; DMA2 Stream 7
   163 0000015C 00000000        DCD              USART6_IRQHandler ; USART6
   164 00000160 00000000        DCD              I2C3_EV_IRQHandler ; I2C3 event
-                                                            
+
   165 00000164 00000000        DCD              I2C3_ER_IRQHandler ; I2C3 error
-                                                            
+
   166 00000168 00000000        DCD              CAN3_TX_IRQHandler ; CAN3 TX
   167 0000016C 00000000        DCD              CAN3_RX0_IRQHandler ; CAN3 RX0
   168 00000170 00000000        DCD              CAN3_RX1_IRQHandler ; CAN3 RX1
@@ -313,34 +313,34 @@ ARM Macro Assembler    Page 5
   184 000001B0 00000000        DCD              QUADSPI_IRQHandler ; QuadSPI
   185 000001B4 00000000        DCD              0           ; Reserved
   186 000001B8 00000000        DCD              0           ; Reserved
-  187 000001BC 00000000        DCD              FMPI2C1_EV_IRQHandler 
+  187 000001BC 00000000        DCD              FMPI2C1_EV_IRQHandler
                                                             ; FMPI2C1 Event
-  188 000001C0 00000000        DCD              FMPI2C1_ER_IRQHandler 
+  188 000001C0 00000000        DCD              FMPI2C1_ER_IRQHandler
                                                             ; FMPI2C1 Error
   189 000001C4 00000000        DCD              LPTIM1_IRQHandler ; LPTIM1
-  190 000001C8 00000000        DCD              DFSDM2_FLT0_IRQHandler 
+  190 000001C8 00000000        DCD              DFSDM2_FLT0_IRQHandler
                                                             ; DFSDM2 Filter0
-  191 000001CC 00000000        DCD              DFSDM2_FLT1_IRQHandler 
+  191 000001CC 00000000        DCD              DFSDM2_FLT1_IRQHandler
                                                             ; DFSDM2 Filter1
-  192 000001D0 00000000        DCD              DFSDM2_FLT2_IRQHandler 
+  192 000001D0 00000000        DCD              DFSDM2_FLT2_IRQHandler
 
 
 
-ARM Macro Assembler    Page 6 
+ARM Macro Assembler    Page 6
 
 
                                                             ; DFSDM2 Filter2
-  193 000001D4 00000000        DCD              DFSDM2_FLT3_IRQHandler 
+  193 000001D4 00000000        DCD              DFSDM2_FLT3_IRQHandler
                                                             ; DFSDM2 Filter3
-  194 000001D8         
+  194 000001D8
   195 000001D8         __Vectors_End
-  196 000001D8         
-  197 000001D8 000001D8 
+  196 000001D8
+  197 000001D8 000001D8
                        __Vectors_Size
                                EQU              __Vectors_End - __Vectors
-  198 000001D8         
+  198 000001D8
   199 000001D8                 AREA             |.text|, CODE, READONLY
-  200 00000000         
+  200 00000000
   201 00000000         ; Reset handler
   202 00000000         Reset_Handler
                                PROC
@@ -348,16 +348,16 @@ ARM Macro Assembler    Page 6
 ]
   204 00000000                 IMPORT           SystemInit
   205 00000000                 IMPORT           __main
-  206 00000000         
+  206 00000000
   207 00000000 4809            LDR              R0, =SystemInit
   208 00000002 4780            BLX              R0
   209 00000004 4809            LDR              R0, =__main
   210 00000006 4700            BX               R0
   211 00000008                 ENDP
-  212 00000008         
-  213 00000008         ; Dummy Exception Handlers (infinite loops which can be 
+  212 00000008
+  213 00000008         ; Dummy Exception Handlers (infinite loops which can be
                        modified)
-  214 00000008         
+  214 00000008
   215 00000008         NMI_Handler
                                PROC
   216 00000008                 EXPORT           NMI_Handler                [WEA
@@ -391,7 +391,7 @@ K]
 
 
 
-ARM Macro Assembler    Page 7 
+ARM Macro Assembler    Page 7
 
 
   239 00000012         SVC_Handler
@@ -418,221 +418,221 @@ K]
 K]
   254 00000018 E7FE            B                .
   255 0000001A                 ENDP
-  256 0000001A         
+  256 0000001A
   257 0000001A         Default_Handler
                                PROC
-  258 0000001A         
-  259 0000001A                 EXPORT           WWDG_IRQHandler                
+  258 0000001A
+  259 0000001A                 EXPORT           WWDG_IRQHandler
    [WEAK]
-  260 0000001A                 EXPORT           PVD_IRQHandler                 
+  260 0000001A                 EXPORT           PVD_IRQHandler
    [WEAK]
-  261 0000001A                 EXPORT           TAMP_STAMP_IRQHandler          
+  261 0000001A                 EXPORT           TAMP_STAMP_IRQHandler
    [WEAK]
-  262 0000001A                 EXPORT           RTC_WKUP_IRQHandler            
+  262 0000001A                 EXPORT           RTC_WKUP_IRQHandler
    [WEAK]
-  263 0000001A                 EXPORT           FLASH_IRQHandler               
+  263 0000001A                 EXPORT           FLASH_IRQHandler
    [WEAK]
-  264 0000001A                 EXPORT           RCC_IRQHandler                 
+  264 0000001A                 EXPORT           RCC_IRQHandler
    [WEAK]
-  265 0000001A                 EXPORT           EXTI0_IRQHandler               
+  265 0000001A                 EXPORT           EXTI0_IRQHandler
    [WEAK]
-  266 0000001A                 EXPORT           EXTI1_IRQHandler               
+  266 0000001A                 EXPORT           EXTI1_IRQHandler
    [WEAK]
-  267 0000001A                 EXPORT           EXTI2_IRQHandler               
+  267 0000001A                 EXPORT           EXTI2_IRQHandler
    [WEAK]
-  268 0000001A                 EXPORT           EXTI3_IRQHandler               
+  268 0000001A                 EXPORT           EXTI3_IRQHandler
    [WEAK]
-  269 0000001A                 EXPORT           EXTI4_IRQHandler               
+  269 0000001A                 EXPORT           EXTI4_IRQHandler
    [WEAK]
-  270 0000001A                 EXPORT           DMA1_Stream0_IRQHandler        
+  270 0000001A                 EXPORT           DMA1_Stream0_IRQHandler
    [WEAK]
-  271 0000001A                 EXPORT           DMA1_Stream1_IRQHandler        
+  271 0000001A                 EXPORT           DMA1_Stream1_IRQHandler
    [WEAK]
-  272 0000001A                 EXPORT           DMA1_Stream2_IRQHandler        
+  272 0000001A                 EXPORT           DMA1_Stream2_IRQHandler
    [WEAK]
-  273 0000001A                 EXPORT           DMA1_Stream3_IRQHandler        
+  273 0000001A                 EXPORT           DMA1_Stream3_IRQHandler
    [WEAK]
-  274 0000001A                 EXPORT           DMA1_Stream4_IRQHandler        
+  274 0000001A                 EXPORT           DMA1_Stream4_IRQHandler
 
 
 
-ARM Macro Assembler    Page 8 
+ARM Macro Assembler    Page 8
 
 
    [WEAK]
-  275 0000001A                 EXPORT           DMA1_Stream5_IRQHandler        
+  275 0000001A                 EXPORT           DMA1_Stream5_IRQHandler
    [WEAK]
-  276 0000001A                 EXPORT           DMA1_Stream6_IRQHandler        
+  276 0000001A                 EXPORT           DMA1_Stream6_IRQHandler
    [WEAK]
-  277 0000001A                 EXPORT           ADC_IRQHandler                 
+  277 0000001A                 EXPORT           ADC_IRQHandler
    [WEAK]
-  278 0000001A                 EXPORT           CAN1_TX_IRQHandler             
+  278 0000001A                 EXPORT           CAN1_TX_IRQHandler
    [WEAK]
-  279 0000001A                 EXPORT           CAN1_RX0_IRQHandler            
+  279 0000001A                 EXPORT           CAN1_RX0_IRQHandler
    [WEAK]
-  280 0000001A                 EXPORT           CAN1_RX1_IRQHandler            
+  280 0000001A                 EXPORT           CAN1_RX1_IRQHandler
    [WEAK]
-  281 0000001A                 EXPORT           CAN1_SCE_IRQHandler            
+  281 0000001A                 EXPORT           CAN1_SCE_IRQHandler
    [WEAK]
-  282 0000001A                 EXPORT           EXTI9_5_IRQHandler             
+  282 0000001A                 EXPORT           EXTI9_5_IRQHandler
    [WEAK]
-  283 0000001A                 EXPORT           TIM1_BRK_TIM9_IRQHandler       
+  283 0000001A                 EXPORT           TIM1_BRK_TIM9_IRQHandler
    [WEAK]
-  284 0000001A                 EXPORT           TIM1_UP_TIM10_IRQHandler       
+  284 0000001A                 EXPORT           TIM1_UP_TIM10_IRQHandler
    [WEAK]
-  285 0000001A                 EXPORT           TIM1_TRG_COM_TIM11_IRQHandler  
+  285 0000001A                 EXPORT           TIM1_TRG_COM_TIM11_IRQHandler
    [WEAK]
-  286 0000001A                 EXPORT           TIM1_CC_IRQHandler             
+  286 0000001A                 EXPORT           TIM1_CC_IRQHandler
    [WEAK]
-  287 0000001A                 EXPORT           TIM2_IRQHandler                
+  287 0000001A                 EXPORT           TIM2_IRQHandler
    [WEAK]
-  288 0000001A                 EXPORT           TIM3_IRQHandler                
+  288 0000001A                 EXPORT           TIM3_IRQHandler
    [WEAK]
-  289 0000001A                 EXPORT           TIM4_IRQHandler                
+  289 0000001A                 EXPORT           TIM4_IRQHandler
    [WEAK]
-  290 0000001A                 EXPORT           I2C1_EV_IRQHandler             
+  290 0000001A                 EXPORT           I2C1_EV_IRQHandler
    [WEAK]
-  291 0000001A                 EXPORT           I2C1_ER_IRQHandler             
+  291 0000001A                 EXPORT           I2C1_ER_IRQHandler
    [WEAK]
-  292 0000001A                 EXPORT           I2C2_EV_IRQHandler             
+  292 0000001A                 EXPORT           I2C2_EV_IRQHandler
    [WEAK]
-  293 0000001A                 EXPORT           I2C2_ER_IRQHandler             
+  293 0000001A                 EXPORT           I2C2_ER_IRQHandler
    [WEAK]
-  294 0000001A                 EXPORT           SPI1_IRQHandler                
+  294 0000001A                 EXPORT           SPI1_IRQHandler
    [WEAK]
-  295 0000001A                 EXPORT           SPI2_IRQHandler                
+  295 0000001A                 EXPORT           SPI2_IRQHandler
    [WEAK]
-  296 0000001A                 EXPORT           USART1_IRQHandler              
+  296 0000001A                 EXPORT           USART1_IRQHandler
    [WEAK]
-  297 0000001A                 EXPORT           USART2_IRQHandler              
+  297 0000001A                 EXPORT           USART2_IRQHandler
    [WEAK]
-  298 0000001A                 EXPORT           USART3_IRQHandler              
+  298 0000001A                 EXPORT           USART3_IRQHandler
    [WEAK]
-  299 0000001A                 EXPORT           EXTI15_10_IRQHandler           
+  299 0000001A                 EXPORT           EXTI15_10_IRQHandler
    [WEAK]
-  300 0000001A                 EXPORT           RTC_Alarm_IRQHandler           
+  300 0000001A                 EXPORT           RTC_Alarm_IRQHandler
    [WEAK]
-  301 0000001A                 EXPORT           OTG_FS_WKUP_IRQHandler         
+  301 0000001A                 EXPORT           OTG_FS_WKUP_IRQHandler
    [WEAK]
-  302 0000001A                 EXPORT           OTG_FS_IRQHandler              
+  302 0000001A                 EXPORT           OTG_FS_IRQHandler
    [WEAK]
-  303 0000001A                 EXPORT           TIM8_BRK_TIM12_IRQHandler      
+  303 0000001A                 EXPORT           TIM8_BRK_TIM12_IRQHandler
    [WEAK]
 
 
 
-ARM Macro Assembler    Page 9 
+ARM Macro Assembler    Page 9
 
 
-  304 0000001A                 EXPORT           TIM8_UP_TIM13_IRQHandler       
+  304 0000001A                 EXPORT           TIM8_UP_TIM13_IRQHandler
    [WEAK]
-  305 0000001A                 EXPORT           TIM8_TRG_COM_TIM14_IRQHandler  
+  305 0000001A                 EXPORT           TIM8_TRG_COM_TIM14_IRQHandler
    [WEAK]
-  306 0000001A                 EXPORT           TIM8_CC_IRQHandler             
+  306 0000001A                 EXPORT           TIM8_CC_IRQHandler
    [WEAK]
-  307 0000001A                 EXPORT           DMA1_Stream7_IRQHandler        
+  307 0000001A                 EXPORT           DMA1_Stream7_IRQHandler
    [WEAK]
-  308 0000001A                 EXPORT           FSMC_IRQHandler                
+  308 0000001A                 EXPORT           FSMC_IRQHandler
    [WEAK]
-  309 0000001A                 EXPORT           SDIO_IRQHandler                
+  309 0000001A                 EXPORT           SDIO_IRQHandler
    [WEAK]
-  310 0000001A                 EXPORT           TIM5_IRQHandler                
+  310 0000001A                 EXPORT           TIM5_IRQHandler
    [WEAK]
-  311 0000001A                 EXPORT           SPI3_IRQHandler                
+  311 0000001A                 EXPORT           SPI3_IRQHandler
    [WEAK]
-  312 0000001A                 EXPORT           UART4_IRQHandler               
+  312 0000001A                 EXPORT           UART4_IRQHandler
    [WEAK]
-  313 0000001A                 EXPORT           UART5_IRQHandler               
+  313 0000001A                 EXPORT           UART5_IRQHandler
    [WEAK]
-  314 0000001A                 EXPORT           TIM6_DAC_IRQHandler            
+  314 0000001A                 EXPORT           TIM6_DAC_IRQHandler
    [WEAK]
-  315 0000001A                 EXPORT           TIM7_IRQHandler                
+  315 0000001A                 EXPORT           TIM7_IRQHandler
    [WEAK]
-  316 0000001A                 EXPORT           DMA2_Stream0_IRQHandler        
+  316 0000001A                 EXPORT           DMA2_Stream0_IRQHandler
    [WEAK]
-  317 0000001A                 EXPORT           DMA2_Stream1_IRQHandler        
+  317 0000001A                 EXPORT           DMA2_Stream1_IRQHandler
    [WEAK]
-  318 0000001A                 EXPORT           DMA2_Stream2_IRQHandler        
+  318 0000001A                 EXPORT           DMA2_Stream2_IRQHandler
    [WEAK]
-  319 0000001A                 EXPORT           DMA2_Stream3_IRQHandler        
+  319 0000001A                 EXPORT           DMA2_Stream3_IRQHandler
    [WEAK]
-  320 0000001A                 EXPORT           DMA2_Stream4_IRQHandler        
+  320 0000001A                 EXPORT           DMA2_Stream4_IRQHandler
    [WEAK]
-  321 0000001A                 EXPORT           DMA2_Stream4_IRQHandler        
+  321 0000001A                 EXPORT           DMA2_Stream4_IRQHandler
    [WEAK]
-  322 0000001A                 EXPORT           DFSDM1_FLT0_IRQHandler         
+  322 0000001A                 EXPORT           DFSDM1_FLT0_IRQHandler
    [WEAK]
-  323 0000001A                 EXPORT           DFSDM1_FLT1_IRQHandler         
+  323 0000001A                 EXPORT           DFSDM1_FLT1_IRQHandler
    [WEAK]
-  324 0000001A                 EXPORT           CAN2_TX_IRQHandler             
+  324 0000001A                 EXPORT           CAN2_TX_IRQHandler
    [WEAK]
-  325 0000001A                 EXPORT           CAN2_RX0_IRQHandler            
+  325 0000001A                 EXPORT           CAN2_RX0_IRQHandler
    [WEAK]
-  326 0000001A                 EXPORT           CAN2_RX1_IRQHandler            
+  326 0000001A                 EXPORT           CAN2_RX1_IRQHandler
    [WEAK]
-  327 0000001A                 EXPORT           CAN2_SCE_IRQHandler            
+  327 0000001A                 EXPORT           CAN2_SCE_IRQHandler
    [WEAK]
-  328 0000001A                 EXPORT           DMA2_Stream5_IRQHandler        
+  328 0000001A                 EXPORT           DMA2_Stream5_IRQHandler
    [WEAK]
-  329 0000001A                 EXPORT           DMA2_Stream6_IRQHandler        
+  329 0000001A                 EXPORT           DMA2_Stream6_IRQHandler
    [WEAK]
-  330 0000001A                 EXPORT           DMA2_Stream7_IRQHandler        
+  330 0000001A                 EXPORT           DMA2_Stream7_IRQHandler
    [WEAK]
-  331 0000001A                 EXPORT           USART6_IRQHandler              
+  331 0000001A                 EXPORT           USART6_IRQHandler
    [WEAK]
-  332 0000001A                 EXPORT           I2C3_EV_IRQHandler             
+  332 0000001A                 EXPORT           I2C3_EV_IRQHandler
    [WEAK]
-  333 0000001A                 EXPORT           I2C3_ER_IRQHandler             
+  333 0000001A                 EXPORT           I2C3_ER_IRQHandler
 
 
 
-ARM Macro Assembler    Page 10 
+ARM Macro Assembler    Page 10
 
 
    [WEAK]
-  334 0000001A                 EXPORT           CAN3_TX_IRQHandler             
+  334 0000001A                 EXPORT           CAN3_TX_IRQHandler
    [WEAK]
-  335 0000001A                 EXPORT           CAN3_RX0_IRQHandler            
+  335 0000001A                 EXPORT           CAN3_RX0_IRQHandler
    [WEAK]
-  336 0000001A                 EXPORT           CAN3_RX1_IRQHandler            
+  336 0000001A                 EXPORT           CAN3_RX1_IRQHandler
    [WEAK]
-  337 0000001A                 EXPORT           CAN3_SCE_IRQHandler            
+  337 0000001A                 EXPORT           CAN3_SCE_IRQHandler
    [WEAK]
-  338 0000001A                 EXPORT           RNG_IRQHandler                 
+  338 0000001A                 EXPORT           RNG_IRQHandler
    [WEAK]
-  339 0000001A                 EXPORT           FPU_IRQHandler                 
+  339 0000001A                 EXPORT           FPU_IRQHandler
    [WEAK]
-  340 0000001A                 EXPORT           UART7_IRQHandler               
+  340 0000001A                 EXPORT           UART7_IRQHandler
    [WEAK]
-  341 0000001A                 EXPORT           UART8_IRQHandler               
+  341 0000001A                 EXPORT           UART8_IRQHandler
    [WEAK]
-  342 0000001A                 EXPORT           SPI4_IRQHandler                
+  342 0000001A                 EXPORT           SPI4_IRQHandler
    [WEAK]
-  343 0000001A                 EXPORT           SPI5_IRQHandler                
+  343 0000001A                 EXPORT           SPI5_IRQHandler
    [WEAK]
-  344 0000001A                 EXPORT           SAI1_IRQHandler                
+  344 0000001A                 EXPORT           SAI1_IRQHandler
    [WEAK]
-  345 0000001A                 EXPORT           UART9_IRQHandler               
+  345 0000001A                 EXPORT           UART9_IRQHandler
    [WEAK]
-  346 0000001A                 EXPORT           UART10_IRQHandler              
+  346 0000001A                 EXPORT           UART10_IRQHandler
    [WEAK]
-  347 0000001A                 EXPORT           QUADSPI_IRQHandler             
+  347 0000001A                 EXPORT           QUADSPI_IRQHandler
    [WEAK]
-  348 0000001A                 EXPORT           FMPI2C1_EV_IRQHandler          
+  348 0000001A                 EXPORT           FMPI2C1_EV_IRQHandler
    [WEAK]
-  349 0000001A                 EXPORT           FMPI2C1_ER_IRQHandler          
+  349 0000001A                 EXPORT           FMPI2C1_ER_IRQHandler
    [WEAK]
-  350 0000001A                 EXPORT           LPTIM1_IRQHandler              
+  350 0000001A                 EXPORT           LPTIM1_IRQHandler
    [WEAK]
-  351 0000001A                 EXPORT           DFSDM2_FLT0_IRQHandler         
+  351 0000001A                 EXPORT           DFSDM2_FLT0_IRQHandler
    [WEAK]
-  352 0000001A                 EXPORT           DFSDM2_FLT1_IRQHandler         
+  352 0000001A                 EXPORT           DFSDM2_FLT1_IRQHandler
    [WEAK]
-  353 0000001A                 EXPORT           DFSDM2_FLT2_IRQHandler         
+  353 0000001A                 EXPORT           DFSDM2_FLT2_IRQHandler
    [WEAK]
-  354 0000001A                 EXPORT           DFSDM2_FLT3_IRQHandler         
+  354 0000001A                 EXPORT           DFSDM2_FLT3_IRQHandler
    [WEAK]
-  355 0000001A         
+  355 0000001A
   356 0000001A         WWDG_IRQHandler
   357 0000001A         PVD_IRQHandler
   358 0000001A         TAMP_STAMP_IRQHandler
@@ -651,7 +651,7 @@ ARM Macro Assembler    Page 10
 
 
 
-ARM Macro Assembler    Page 11 
+ARM Macro Assembler    Page 11
 
 
   371 0000001A         DMA1_Stream4_IRQHandler
@@ -716,7 +716,7 @@ ARM Macro Assembler    Page 11
 
 
 
-ARM Macro Assembler    Page 12 
+ARM Macro Assembler    Page 12
 
 
   430 0000001A         CAN3_TX_IRQHandler
@@ -740,55 +740,56 @@ ARM Macro Assembler    Page 12
   448 0000001A         DFSDM2_FLT1_IRQHandler
   449 0000001A         DFSDM2_FLT2_IRQHandler
   450 0000001A         DFSDM2_FLT3_IRQHandler
-  451 0000001A         
+  451 0000001A
   452 0000001A E7FE            B                .
-  453 0000001C         
+  453 0000001C
   454 0000001C                 ENDP
-  455 0000001C         
+  455 0000001C
   456 0000001C                 ALIGN
-  457 0000001C         
+  457 0000001C
   458 0000001C         ;*******************************************************
                        ************************
   459 0000001C         ; User Stack and Heap initialization
   460 0000001C         ;*******************************************************
                        ************************
   461 0000001C                 IF               :DEF:__MICROLIB
-  468 0000001C         
+  468 0000001C
   469 0000001C                 IMPORT           __use_two_region_memory
   470 0000001C                 EXPORT           __user_initial_stackheap
-  471 0000001C         
+  471 0000001C
   472 0000001C         __user_initial_stackheap
-  473 0000001C         
+  473 0000001C
   474 0000001C 4804            LDR              R0, =  Heap_Mem
   475 0000001E 4905            LDR              R1, =(Stack_Mem + Stack_Size)
   476 00000020 4A05            LDR              R2, = (Heap_Mem +  Heap_Size)
   477 00000022 4B06            LDR              R3, = Stack_Mem
   478 00000024 4770            BX               LR
-  479 00000026         
+  479 00000026
   480 00000026 00 00           ALIGN
-  481 00000028         
+  481 00000028
   482 00000028                 ENDIF
-  483 00000028         
+  483 00000028
   484 00000028                 END
-              00000000 
-              00000000 
-              00000000 
-              00000400 
-              00000200 
-              00000000 
+              00000000
+              00000000
+              00000000
+              00000400
+              00000200
+              00000000
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
 erwork --depend=.\objects\startup_stm32f413xx.d -o.\objects\startup_stm32f413xx
 
 
 
-ARM Macro Assembler    Page 13 
+ARM Macro Assembler    Page 13
 
 
-.o -I.\RTE\_Target_1 -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\Core\Include -
-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSIS\Device\ST\STM32F4x
-x\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERSION SETA 526" 
---predefine="_RTE_ SETA 1" --predefine="STM32F413xx SETA 1" --list=.\listings\s
-tartup_stm32f413xx.lst RTE\Device\STM32F413RHTx\startup_stm32f413xx.s
+.o -I.\RTE\_Target_1 -I"D:\Program Files\Keil\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\In
+clude" -I"D:\Program Files\Keil\ARM\PACK\Keil\STM32F4xx_DFP\2.13.0\Drivers\CMSI
+S\Device\ST\STM32F4xx\Include" --predefine="__EVAL SETA 1" --predefine="__UVISI
+ON_VERSION SETA 525" --predefine="_RTE_ SETA 1" --predefine="STM32F413xx SETA 1
+" --list=.\listings\startup_stm32f413xx.lst RTE\Device\STM32F413RHTx\startup_st
+m32f413xx.s
 
 
 

@@ -47,7 +47,7 @@ void initialize(void){
 #include "LTC6811.h"
 #include "UART.h"
 #include <string.h>
-int LTCmain(){
+int LTC6811Testmain(){
 	LTC6811_Init();
 	UART3_Init(9600);
 	while(1){
@@ -55,7 +55,33 @@ int LTCmain(){
 	}
 }
 
-// UART Test
+// SPI Test
+int main(){
+	__disable_irq();
+	UART3_Init(9600);
+	SPI1_Init();
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);	// 1) Initialize GPIO portB clock
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;								// 2) Initialize which pins to use
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;						// 3) Set PA8 and PA9 as alternate function
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;							// 4) Set the resistor to pull-up
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;				// 5) Initialize the speed of communication as 25 MHz
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;						// 6) Set to open drain
+	GPIO_Init(GPIOB, &GPIO_InitStruct);
+	GPIOB->ODR |= GPIO_Pin_6;
+	__enable_irq();
+	
+	char str[30] = "Testing\n\r";
+	UART3_Write(str, strlen(str));
+	GPIOB->ODR &= ~GPIO_Pin_6;
+	SPI1_Write((uint8_t *)str, strlen(str));
+	GPIOB->ODR |= GPIO_Pin_6;
+	while(1){
+		
+	}
+}
+
+// Debug UART Test
 int UARTTestmain(){
 	char str[] = "Hello there.";
 	UART3_Init(9600);
@@ -65,20 +91,14 @@ int UARTTestmain(){
 	}
 }
 
-#include <stdio.h>
-#include <string.h>
-#include "ADC.h"
-int main() {
-	char str[100];
+// Gyro test
+#include "FXAS21002CQR1.h"
+int gyroTestmain(){
+	FXAS21002CQR1_Init();
 	UART3_Init(9600);
-	ADC_Initialize();
-	while(1) {
-		uint16_t low = ADC_ReadLowPrecision();
-		uint16_t high = ADC_ReadHighPrecision();
-		sprintf(str, "%d\t%d\n", low, high);
-		UART3_Write(str, strlen(str));
-		for(int i = 0; i < 100000000; i++) {}
+	while(1){
+		uint16_t *vals = FXAS21002CQR1_Measure();
+		// print or something
 	}
-	
 }
-	
+>>>>>>> 5d024259534e6a9b3cd7bb1da76dcb18c778cc21

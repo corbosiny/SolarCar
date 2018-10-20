@@ -443,9 +443,14 @@
               <FilePath>.\User\FIFO.c</FilePath>
             </File>
             <File>
-              <FileName>ADC.c</FileName>
+              <FileName>FXAS21002CQR1.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\User\ADC.c</FilePath>
+              <FilePath>.\User\FXAS21002CQR1.c</FilePath>
+            </File>
+            <File>
+              <FileName>Terminal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Terminal.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -513,9 +518,9 @@
               <FilePath>.\User\FIFO.h</FilePath>
             </File>
             <File>
-              <FileName>ADC.h</FileName>
+              <FileName>FXAS21002CQR1.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\User\ADC.h</FilePath>
+              <FilePath>.\User\FXAS21002CQR1.h</FilePath>
             </File>
           </Files>
         </Group>
