@@ -174,7 +174,7 @@ void UART3_Read(char *rxBuf, uint32_t rxSize){
 void UART3_WriteInt(uint16_t num) {
 	char buf[6];
 	for (int i = 5; i > 0; i++) {
-		buf[i] = num % 10;
+		buf[i] = num % 10 + '0';
 		num = num / 10;
 	}
 	UART3_Write(buf, 6);

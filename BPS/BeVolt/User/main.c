@@ -118,8 +118,8 @@ int ADCmain() {
 	ADC_Initialize();
 	UART3_Init(9600);
 	while(1) {
-		uint16_t ADC_ReadLowPrecision();
-		UART3_Write(str, strlen(str));
+		uint16_t val = ADC_ReadLowPrecision();
+		UART3_WriteInt(val);
 		for(uint32_t i = 0; i < 100000; i++);
 	}
 }
