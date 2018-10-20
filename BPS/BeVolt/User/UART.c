@@ -168,6 +168,18 @@ void UART3_Read(char *rxBuf, uint32_t rxSize){
 	}
 }
 
+/** UART3_WriteInt
+ * Writes an unsigned 16 bit number as string to UART
+ */
+void UART3_WriteInt(uint16_t num) {
+	char buf[6];
+	for (int i = 5; i > 0; i++) {
+		buf[i] = num % 10;
+		num = num / 10;
+	}
+	UART3_Write(buf, 6);
+}
+
 // Private Function Definitions
 /** copySoftwareToHardware
  * Places contents of tx software buffer to hardware FIFO

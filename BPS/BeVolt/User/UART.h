@@ -66,4 +66,10 @@ void UART3_Write(char *txBuf, uint32_t txSize);
  */
 void UART3_Read(char *rxBuf, uint32_t rxSize);
 
+
+/** UART_WriteInt
+ * Writes an unsigned 16 bit number to UART as string
+ */
+void UART3_WriteInt(uint16_t num);
+
 #endif

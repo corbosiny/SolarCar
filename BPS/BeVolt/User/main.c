@@ -56,7 +56,7 @@ int LTC6811Testmain(){
 }
 
 // SPI Test
-int main(){
+int Blehmain(){
 	__disable_irq();
 	UART3_Init(9600);
 	SPI1_Init();
@@ -91,6 +91,16 @@ int UARTTestmain(){
 	}
 }
 
+// Debug UART WriteInt
+int main() {
+//int UARTTestWriteInt() {
+	UART3_Init(9600);
+	for(uint16_t i = 0; i < 65000; i++) {
+		UART3_WriteInt(i);
+		for(uint32_t j = 0; j < 100000; j++);
+	}
+}
+
 // Gyro test
 #include "FXAS21002CQR1.h"
 int gyroTestmain(){
@@ -101,4 +111,15 @@ int gyroTestmain(){
 		// print or something
 	}
 }
->>>>>>> 5d024259534e6a9b3cd7bb1da76dcb18c778cc21
+
+// ADC test
+#include "ADC.h"
+int ADCmain() {
+	ADC_Initialize();
+	UART3_Init(9600);
+	while(1) {
+		uint16_t ADC_ReadLowPrecision();
+		UART3_Write(str, strlen(str));
+		for(uint32_t i = 0; i < 100000; i++);
+	}
+}
