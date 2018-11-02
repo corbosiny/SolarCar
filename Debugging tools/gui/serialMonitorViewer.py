@@ -34,7 +34,12 @@ class SerialMonitorInterface(QWidget):
       "Get Output Current": "CurrentOut\n",
       "Get Input Power": "PowerIn\n",
       "Get Output Power": "PowerOut\n",
-      "Get Duty Cycle": "DutyCycle\n"
+      "Get Duty Cycle": "DutyCycle\n",
+
+      "Current Algorithm": "CurrentAlgo\n",
+      "Perturb and Observe": "PandO\n",
+      "Incremental Conductance": "IncrementalConductance\n",
+      "Fuzzy Logic": "FuzzyLogic\n"
     })
     self.varTrackers = dict({
       "Get Input Voltage": {
@@ -131,9 +136,26 @@ class SerialMonitorInterface(QWidget):
     clearButton = QPushButton("Clear responses")
     clearButton.clicked.connect(self.onClearButtonClicked)
     layout.addWidget(clearButton)
+
+    # Algo stuff here
+    currAlgBtn = QPushButton("Current Algorithm")
+    currAlgBtn.clicked.connect(self.onCurrAlgBtnClicked)
+    layout.addWidget(currAlgBtn)
+
+    self.algCombobox = QComboBox()
+    self.algCombobox.addItem("Perturb and Observe")
+    self.algCombobox.addItem("Incremental Conductance")
+    self.algCombobox.addItem("Fuzzy Logic")
+    layout.addWidget(self.algCombobox)
+
+    switchAlgBtn = QPushButton("Switch Algorithm")
+    switchAlgBtn.clicked.connect(self.onSwitchAlgBtnClicked)
+    layout.addWidget(switchAlgBtn)
+
+
     
     # Initialize window
-    self.setGeometry(600, 600, 600, 440)
+    self.setGeometry(900, 900, 900, 660)
     self.setWindowTitle("MPPT Debug Interface")
     self.show()
 
@@ -154,11 +176,12 @@ class SerialMonitorInterface(QWidget):
     sb = self.monitorOutput.verticalScrollBar()
     sb.setValue(sb.maximum())
 
-    print(response)
-
-    outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
-    self.varTrackers[outputMap]['time'].append(timestamp)
-    self.varTrackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
+    try:
+      outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
+      self.varTrackers[outputMap]['time'].append(timestamp)
+      self.varTrackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
+    except:
+      return
 
   def onClearButtonClicked(self):
     self.monitorOutput.clear()
@@ -173,7 +196,7 @@ class SerialMonitorInterface(QWidget):
       command = self.commands[text]
       self.serialMonitor.sendStringToComPort(command)
       response = self.serialMonitor.getLineFromComPort()
-      self.appendDebugOutput(response)
+      self.appendDebugOutput(response.rstrip("\n\r") + "\n")
     else:
       self.appendDebugOutput("Error: Unsupported option \"" + text + "\"\n")
       return
@@ -206,6 +229,13 @@ class SerialMonitorInterface(QWidget):
     )
     plot.gcf().autofmt_xdate()
     plot.show()
+
+  def onCurrAlgBtnClicked(self):
+    self.sendAndReceive("Current Algorithm")
+
+  def onSwitchAlgBtnClicked(self):
+    text = self.algCombobox.currentText()
+    self.sendAndReceive(text)
 
   '''
   Periodically request the power
