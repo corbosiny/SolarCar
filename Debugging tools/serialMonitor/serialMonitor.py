@@ -7,7 +7,7 @@ from threading import Lock
 
 class SerialMonitor():
 
-    def __init__(self, comPort, baudRate = 9600):
+    def __init__(self, comPort, baudRate = 115200):
         self.comPort = comPort
         self.baudRate = baudRate
         self.serialConnection = serial.Serial(comPort, baudRate)

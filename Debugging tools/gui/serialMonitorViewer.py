@@ -154,7 +154,9 @@ class SerialMonitorInterface(QWidget):
     sb = self.monitorOutput.verticalScrollBar()
     sb.setValue(sb.maximum())
 
-    outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response)[:-3]]
+    print(response)
+
+    outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
     self.varTrackers[outputMap]['time'].append(timestamp)
     self.varTrackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
 
