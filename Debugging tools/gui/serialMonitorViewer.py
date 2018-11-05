@@ -186,6 +186,9 @@ class SerialMonitorInterface(QWidget):
   def onClearButtonClicked(self):
     self.monitorOutput.clear()
 
+  def sendDummy(self):
+    self.sendAndReceive("Dummy\n")
+
   def sendAndReceive(self, text):
     if self.serialMonitor is None:
       self.appendDebugOutput("Error: No SerialMonitor instance\n")
@@ -197,6 +200,13 @@ class SerialMonitorInterface(QWidget):
       self.serialMonitor.sendStringToComPort(command)
       response = self.serialMonitor.getLineFromComPort()
       self.appendDebugOutput(response.rstrip("\n\r") + "\n")
+      # self.sendDummy()
+    elif "Dummy" in text:
+      print("dummy here")
+      self.serialMonitor.sendStringToComPort(text)
+      response = self.serialMonitor.getLineFromComPort()
+      print(response)
+      return
     else:
       self.appendDebugOutput("Error: Unsupported option \"" + text + "\"\n")
       return
