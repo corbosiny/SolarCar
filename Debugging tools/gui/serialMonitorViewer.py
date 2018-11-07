@@ -171,12 +171,13 @@ class SerialMonitorInterface(QWidget):
   def appendDebugOutput(self, response):
     self.monitorOutput.moveCursor(QTextCursor.End)
     timestamp = time.time()
-    timestamp = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    self.monitorOutput.insertPlainText("[" + timestamp + "]\t" + response)
+    timestamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+    self.monitorOutput.insertPlainText("[" + timestamp + "]\t" + response.lstrip())
     sb = self.monitorOutput.verticalScrollBar()
     sb.setValue(sb.maximum())
 
     try:
+      print(re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3])
       outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
       self.varTrackers[outputMap]['time'].append(timestamp)
       self.varTrackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
@@ -200,12 +201,10 @@ class SerialMonitorInterface(QWidget):
       self.serialMonitor.sendStringToComPort(command)
       response = self.serialMonitor.getLineFromComPort()
       self.appendDebugOutput(response.rstrip("\n\r") + "\n")
-      # self.sendDummy()
+      self.sendDummy()
     elif "Dummy" in text:
-      print("dummy here")
       self.serialMonitor.sendStringToComPort(text)
       response = self.serialMonitor.getLineFromComPort()
-      print(response)
       return
     else:
       self.appendDebugOutput("Error: Unsupported option \"" + text + "\"\n")
