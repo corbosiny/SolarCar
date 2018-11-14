@@ -45,41 +45,53 @@ class SerialMonitorInterface(QWidget):
       "Get Input Voltage": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Input Voltage",
+        'y-label': "Voltage (V)"
       },
       "Get Output Voltage": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Output Voltage",
+        'y-label': "Voltage (V)"
       },
       "Get Input Current": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Input Current",
+        'y-label': "Current (A)"
       },
       "Get Output Current": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Output Current",
+        'y-label': "Current (A)"
       },
       "Get Input Power": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Input Power",
+        'y-label': "Power (W)"
       },
       "Get Output Power": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Ouput Power",
+        'y-label': "Power (W)"
       },
       "Get Duty Cycle": {
         'monitorActive': False,
         'time': [],
-        'vals': []
+        'vals': [],
+        'title': "Duty Cycle",
+        'y-label': "Percentage (%)"
       }
     })
-    self.time = []
-    self.vals = []
 
   def assignMonitor(self, serialMonitor):
     self.serialMonitor = serialMonitor
@@ -155,7 +167,7 @@ class SerialMonitorInterface(QWidget):
 
     
     # Initialize window
-    self.setGeometry(900, 900, 900, 660)
+    self.setGeometry(900, 900, 600, 660)
     self.setWindowTitle("MPPT Debug Interface")
     self.show()
 
