@@ -3,18 +3,20 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from threading import Thread
+import multiprocessing
 
 from gui.serialMonitorViewer import SerialMonitorInterface
 from serialMonitor.serialMonitor import SerialMonitor
 
-if __name__ == "__main__":
+def start_gui(serialMonitor):
   app = QApplication(sys.argv)
   smi = SerialMonitorInterface()
+  smi.assignMonitor(serialMonitor)
+  sys.exit(app.exec())
 
+if __name__ == "__main__":
+  app = QApplication(sys.argv)
   comPort = "/dev/ttyACM0"
   serialMonitor = SerialMonitor(comPort)
-  smi.assignMonitor(serialMonitor)
-  
-  # Thread(target=smi.periodicPowerPoll).start()
-  # smi.monitorThreads["VoltageIn\n"] = None
-  sys.exit(app.exec())
+
+  start_gui(serialMonitor)

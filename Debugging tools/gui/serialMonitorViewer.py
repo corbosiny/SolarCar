@@ -8,6 +8,7 @@ import re
 import matplotlib.pyplot as plot
 
 from threading import Thread
+import multiprocessing
 
 from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QGridLayout, QPushButton, QTextEdit
 from PyQt5.QtGui import QTextCursor
@@ -44,20 +45,23 @@ class SerialMonitorInterface(QWidget):
     self.varTrackers = dict({
       "Get Input Voltage": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Input Voltage",
-        'y-label': "Voltage (V)"
+        'y-label': "Voltage (V)",
       },
       "Get Output Voltage": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Output Voltage",
-        'y-label': "Voltage (V)"
+        'y-label': "Voltage (V)",
       },
       "Get Input Current": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Input Current",
@@ -65,6 +69,7 @@ class SerialMonitorInterface(QWidget):
       },
       "Get Output Current": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Output Current",
@@ -72,6 +77,7 @@ class SerialMonitorInterface(QWidget):
       },
       "Get Input Power": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Input Power",
@@ -79,6 +85,7 @@ class SerialMonitorInterface(QWidget):
       },
       "Get Output Power": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Ouput Power",
@@ -86,6 +93,7 @@ class SerialMonitorInterface(QWidget):
       },
       "Get Duty Cycle": {
         'monitorActive': False,
+        'plotActive': False,
         'time': [],
         'vals': [],
         'title': "Duty Cycle",
@@ -140,7 +148,7 @@ class SerialMonitorInterface(QWidget):
     layout.addWidget(stopMonitorButton)
 
     # Initialize plot button
-    plotButton = QPushButton("Plot data")
+    plotButton = QPushButton("Plot data / Stop plotting")
     plotButton.clicked.connect(self.onPlotButtonClicked)
     layout.addWidget(plotButton)
 
@@ -242,14 +250,41 @@ class SerialMonitorInterface(QWidget):
     text = self.combobox.currentText()
     self.varTrackers[text]['monitorActive'] = False
 
+  def plotData(self, data):
+    plot.figure(self.varTrackers[data]['title'])
+    plot.ion()
+    plot.show(block=False)
+
+    while self.varTrackers[data]['plotActive']:
+      plot.cla()
+      plot.title(self.varTrackers[data]['title'])
+      plot.xlabel("Time (s)")
+      plot.ylabel(self.varTrackers[data]['y-label'])
+      plot.plot(
+        self.varTrackers[data]['time'][-10:],
+        self.varTrackers[data]['vals'][-10:]
+      )
+      plot.gcf().autofmt_xdate()
+      plot.draw()
+      plot.pause(0.001)
+
   def onPlotButtonClicked(self):
     text = self.combobox.currentText()
-    plot.plot(
-      self.varTrackers[text]['time'][-10:],
-      self.varTrackers[text]['vals'][-10:]
-    )
-    plot.gcf().autofmt_xdate()
-    plot.show()
+
+    if not self.varTrackers[text]['plotActive']:
+      self.varTrackers[text]['plotActive'] = True
+      Thread(
+        target=self.plotData,
+        args=[text]
+      ).start()
+      '''
+      multiprocessing.Process(
+        target=self.plotData,
+        args=[text]
+      ).start()
+      '''
+    else:
+      self.varTrackers[text]['plotActive'] = False
 
   def onCurrAlgBtnClicked(self):
     self.sendAndReceive("Current Algorithm")
