@@ -13,96 +13,28 @@ import multiprocessing
 from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QGridLayout, QPushButton, QTextEdit
 from PyQt5.QtGui import QTextCursor
 
+import viewer_constants
+import viewer_elements
+
 class SerialMonitorInterface(QWidget):
   
   def __init__(self):
     super().__init__()
     self.initUI()
-    self.monitorThreads = dict()
-    self.outputMapping = dict({
-      "Voltage In": "Get Input Voltage",
-      "Voltage Out": "Get Output Voltage",
-      "Current In": "Get Input Current",
-      "Current Out": "Get Output Current",
-      "Power In": "Get Input Power",
-      "Power Out": "Get Output Power",
-      "Duty Cycle": "Get Duty Cycle"
-    })
-    self.commands = dict({
-      "Get Input Voltage": "VoltageIn\n",
-      "Get Output Voltage": "VoltageOut\n",
-      "Get Input Current": "CurrentIn\n",
-      "Get Output Current": "CurrentOut\n",
-      "Get Input Power": "PowerIn\n",
-      "Get Output Power": "PowerOut\n",
-      "Get Duty Cycle": "DutyCycle\n",
-
-      "Current Algorithm": "CurrentAlgo\n",
-      "Perturb and Observe": "PandO\n",
-      "Incremental Conductance": "IncrementalConductance\n",
-      "Fuzzy Logic": "FuzzyLogic\n"
-    })
-    self.varTrackers = dict({
-      "Get Input Voltage": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Input Voltage",
-        'y-label': "Voltage (V)",
-      },
-      "Get Output Voltage": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Output Voltage",
-        'y-label': "Voltage (V)",
-      },
-      "Get Input Current": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Input Current",
-        'y-label': "Current (A)"
-      },
-      "Get Output Current": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Output Current",
-        'y-label': "Current (A)"
-      },
-      "Get Input Power": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Input Power",
-        'y-label': "Power (W)"
-      },
-      "Get Output Power": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Ouput Power",
-        'y-label': "Power (W)"
-      },
-      "Get Duty Cycle": {
-        'monitorActive': False,
-        'plotActive': False,
-        'time': [],
-        'vals': [],
-        'title': "Duty Cycle",
-        'y-label': "Percentage (%)"
-      }
+    self.output_mapping  = get_output_mapping(),
+    self.commands        = get_command_mapping(),
+    self.var_trackers    = dict({
+      voltage_in['label']:  get_var_tracker(VOLTAGE_IN,  voltage_in['unit']),
+      voltage_out['label']: get_var_tracker(VOLTAGE_OUT, voltage_out['unit']),
+      current_in['label']:  get_var_tracker(CURRENT_IN,  current_in['unit']),
+      current_out['label']: get_var_tracker(CURRENT_OUT, current_out['unit']),
+      power_in['label']:    get_var_tracker(POWER_IN,    power_in['unit']),
+      power_out['label']:   get_var_tracker(POWER_OUT,   power_out['unit']),
+      duty_cycle['label']:  get_var_tracker(DUTY_CYCLE,  duty_cycle['unit'])
     })
 
   def assignMonitor(self, serialMonitor):
-    self.serialMonitor = serialMonitor
+    self.serial_monitor = serialMonitor
 
   def initUI(self):
     # Initialize layout
@@ -110,32 +42,23 @@ class SerialMonitorInterface(QWidget):
     self.setLayout(layout)
     
     # Initialize Combobox
-    self.combobox = QComboBox()
-    self.combobox.addItem("Get Input Voltage")
-    self.combobox.addItem("Get Output Voltage")
-    self.combobox.addItem("Get Input Current")
-    self.combobox.addItem("Get Output Current")
-    self.combobox.addItem("Get Input Power")
-    self.combobox.addItem("Get Output Power")
-    self.combobox.addItem("Get Effective Power")
-    self.combobox.addItem("Get Duty Cycle")
-
-    self.combobox.currentTextChanged.connect(self.combobox_changed)
-    layout.addWidget(self.combobox)
+    self.var_combo = get_var_combobox()
+    self.var_combo.currentTextChanged.connect(self.var_combo_changed)
+    layout.addWidget(self.var_combo)
 
     # Initialize display text
-    self.monitorOutput = QTextEdit()
-    self.monitorOutput.setReadOnly(True)
-    self.monitorOutput.setLineWrapMode(QTextEdit.NoWrap)
-    font = self.monitorOutput.font()
+    self.monitor_output = QTextEdit()
+    self.monitor_output.setReadOnly(True)
+    self.monitor_output.setLineWrapMode(QTextEdit.NoWrap)
+    font = self.monitor_output.font()
     font.setFamily("Courier")
     font.setPointSize(10)
-    layout.addWidget(self.monitorOutput)
+    layout.addWidget(self.monitor_output)
 
     # Initialize request button
-    requestButton = QPushButton("Interrogate board")
-    requestButton.clicked.connect(self.onRequestButtonClicked)
-    layout.addWidget(requestButton)
+    request_button = QPushButton("Interrogate board")
+    request_button.clicked.connect(self.on_req_btn_clicked)
+    layout.addWidget(request_button)
 
     # Initialize periodic poll button
     periodicPollButton = QPushButton("Periodically poll board")
@@ -162,17 +85,12 @@ class SerialMonitorInterface(QWidget):
     currAlgBtn.clicked.connect(self.onCurrAlgBtnClicked)
     layout.addWidget(currAlgBtn)
 
-    self.algCombobox = QComboBox()
-    self.algCombobox.addItem("Perturb and Observe")
-    self.algCombobox.addItem("Incremental Conductance")
-    self.algCombobox.addItem("Fuzzy Logic")
-    layout.addWidget(self.algCombobox)
+    self.algo_combo = get_alg_combobox()
+    layout.addWidget(self.algo_combo)
 
     switchAlgBtn = QPushButton("Switch Algorithm")
     switchAlgBtn.clicked.connect(self.onSwitchAlgBtnClicked)
     layout.addWidget(switchAlgBtn)
-
-
     
     # Initialize window
     self.setGeometry(900, 900, 600, 660)
@@ -183,48 +101,48 @@ class SerialMonitorInterface(QWidget):
   On trigger of combobox change
   '''
   def combobox_changed(self):
-    text = self.combobox.currentText()
+    text = self.var_combo.currentText()
 
   '''
   Append the response from the board to text display
   '''
   def appendDebugOutput(self, response):
-    self.monitorOutput.moveCursor(QTextCursor.End)
+    self.monitor_output.moveCursor(QTextCursor.End)
     timestamp = time.time()
     timestamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
-    self.monitorOutput.insertPlainText("[" + timestamp + "]\t" + response.lstrip())
-    sb = self.monitorOutput.verticalScrollBar()
+    self.monitor_output.insertPlainText("[" + timestamp + "]\t" + response.lstrip())
+    sb = self.monitor_output.verticalScrollBar()
     sb.setValue(sb.maximum())
 
     try:
       print(re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3])
-      outputMap = self.outputMapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
-      self.varTrackers[outputMap]['time'].append(timestamp)
-      self.varTrackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
+      outputMap = self.output_mapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
+      self.var_trackers[outputMap]['time'].append(timestamp)
+      self.var_trackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
     except:
       return
 
   def onClearButtonClicked(self):
-    self.monitorOutput.clear()
+    self.monitor_output.clear()
 
   def sendDummy(self):
     self.sendAndReceive("Dummy\n")
 
   def sendAndReceive(self, text):
-    if self.serialMonitor is None:
+    if self.serial_monitor is None:
       self.appendDebugOutput("Error: No SerialMonitor instance\n")
       return
 
     # Convert text to board expected values
     if text in self.commands:
       command = self.commands[text]
-      self.serialMonitor.sendStringToComPort(command)
-      response = self.serialMonitor.getLineFromComPort()
+      self.serial_monitor.sendStringToComPort(command)
+      response = self.serial_monitor.getLineFromComPort()
       self.appendDebugOutput(response.rstrip("\n\r") + "\n")
       self.sendDummy()
     elif "Dummy" in text:
-      self.serialMonitor.sendStringToComPort(text)
-      response = self.serialMonitor.getLineFromComPort()
+      self.serial_monitor.sendStringToComPort(text)
+      response = self.serial_monitor.getLineFromComPort()
       return
     else:
       self.appendDebugOutput("Error: Unsupported option \"" + text + "\"\n")
@@ -233,46 +151,53 @@ class SerialMonitorInterface(QWidget):
   '''
   On trigger of button pressed
   '''
-  def onRequestButtonClicked(self):
-    text = self.combobox.currentText()
+  def on_req_btn_clicked(self):
+    text = self.var_combo.currentText()
     self.sendAndReceive(text)
 
   def onPeriodicPollButtonClicked(self):
     print("Poll pressed")
-    text = self.combobox.currentText()
-    self.varTrackers[text]['monitorActive'] = True
+    text = self.var_combo.currentText()
+    self.var_trackers[text]['monitorActive'] = True
     Thread(
       target=self.periodicPoll,
       args=[text, 3]
     ).start()
 
   def onStopMonitorButtonClicked(self):
-    text = self.combobox.currentText()
-    self.varTrackers[text]['monitorActive'] = False
+    text = self.var_combo.currentText()
+    self.var_trackers[text]['monitorActive'] = False
+
+  def onCurrAlgBtnClicked(self):
+    self.sendAndReceive("Current Algorithm")
+
+  def onSwitchAlgBtnClicked(self):
+    text = self.algo_combo.currentText()
+    self.sendAndReceive(text)
 
   def plotData(self, data):
-    plot.figure(self.varTrackers[data]['title'])
+    plot.figure(self.var_trackers[data]['title'])
     plot.ion()
     plot.show(block=False)
 
-    while self.varTrackers[data]['plotActive']:
+    while self.var_trackers[data]['plotActive']:
       plot.cla()
-      plot.title(self.varTrackers[data]['title'])
+      plot.title(self.var_trackers[data]['title'])
       plot.xlabel("Time (s)")
-      plot.ylabel(self.varTrackers[data]['y-label'])
+      plot.ylabel(self.var_trackers[data]['y-label'])
       plot.plot(
-        self.varTrackers[data]['time'][-10:],
-        self.varTrackers[data]['vals'][-10:]
+        self.var_trackers[data]['time'][-10:],
+        self.var_trackers[data]['vals'][-10:]
       )
       plot.gcf().autofmt_xdate()
       plot.draw()
       plot.pause(0.001)
 
   def onPlotButtonClicked(self):
-    text = self.combobox.currentText()
+    text = self.var_combo.currentText()
 
-    if not self.varTrackers[text]['plotActive']:
-      self.varTrackers[text]['plotActive'] = True
+    if not self.var_trackers[text]['plotActive']:
+      self.var_trackers[text]['plotActive'] = True
       Thread(
         target=self.plotData,
         args=[text]
@@ -284,21 +209,14 @@ class SerialMonitorInterface(QWidget):
       ).start()
       '''
     else:
-      self.varTrackers[text]['plotActive'] = False
-
-  def onCurrAlgBtnClicked(self):
-    self.sendAndReceive("Current Algorithm")
-
-  def onSwitchAlgBtnClicked(self):
-    text = self.algCombobox.currentText()
-    self.sendAndReceive(text)
+      self.var_trackers[text]['plotActive'] = False
 
   '''
   Periodically request the power
   '''
   def periodicPoll(self, command, timeInterval):
-    print(self.varTrackers[command])
-    while (self.varTrackers[command]['monitorActive']):
+    print(self.var_trackers[command])
+    while (self.var_trackers[command]['monitorActive']):
       time.sleep(timeInterval)
       self.sendAndReceive(command)
     return
