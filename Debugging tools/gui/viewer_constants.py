@@ -1,31 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-VOLTAGE_IN 	= "Voltage In"
-voltage_in 	=  get_label_cmd("Get Input Voltage", "VoltageIn\n", "Voltage (V)")
-
-VOLTAGE_OUT = "Voltage Out"
-voltage_out = get_label_cmd("Get Output Voltage", "VoltageOut\n", "Voltage (V)")
-
-CURRENT_IN 	= "Current In"
-current_in 	= get_label_cmd("Get Input Current", "CurrentIn\n", "Current (A)")
-
-CURRENT_OUT = "Current Out"
-current_out = get_label_cmd("Get Output Current", "CurrentOut\n". "Current (A)")
-
-POWER_IN 		= "Power In"
-power_in 		= get_label_cmd("Get Input Power", "PowerIn\n", "Power (W)")
-
-POWER_OUT 	= "Power Out"
-power_out 	= get_label_cmd("Get Output Power", "PowerOut\n", "Power (W)")
-
-DUTY_CYCLE 	= "Duty Cycle"
-duty_cycle 	= get_label_cmd("Get Duty Cycle", "DutyCycle\n", "Percentage (%)")
-
-CUR_ALGO		= "Current Algorithm"
-P_AND_O			= "Perturb and Observe"
-INC_COND    = "Incremental Conductance"
-FUZ_LOGIC 	= "Fuzzy Logic"
-
 def get_label_cmd(label, cmd, unit):
 	return dict({
 		'label': label,
@@ -69,3 +43,29 @@ def get_var_tracker(title, ylabel):
 		'title': title,
 		'y-label': ylabel,
 	})
+
+VOLTAGE_IN 	= "Voltage In"
+voltage_in 	=  get_label_cmd("Get Input Voltage", "VoltageIn\n", "Voltage (V)")
+
+VOLTAGE_OUT = "Voltage Out"
+voltage_out = get_label_cmd("Get Output Voltage", "VoltageOut\n", "Voltage (V)")
+
+CURRENT_IN 	= "Current In"
+current_in 	= get_label_cmd("Get Input Current", "CurrentIn\n", "Current (A)")
+
+CURRENT_OUT = "Current Out"
+current_out = get_label_cmd("Get Output Current", "CurrentOut\n", "Current (A)")
+
+POWER_IN 		= "Power In"
+power_in 		= get_label_cmd("Get Input Power", "PowerIn\n", "Power (W)")
+
+POWER_OUT 	= "Power Out"
+power_out 	= get_label_cmd("Get Output Power", "PowerOut\n", "Power (W)")
+
+DUTY_CYCLE 	= "Duty Cycle"
+duty_cycle 	= get_label_cmd("Get Duty Cycle", "DutyCycle\n", "Percentage (%)")
+
+CUR_ALGO		= "Current Algorithm"
+P_AND_O			= "Perturb and Observe"
+INC_COND    = "Incremental Conductance"
+FUZ_LOGIC 	= "Fuzzy Logic"

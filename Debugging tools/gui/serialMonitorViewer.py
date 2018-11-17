@@ -13,24 +13,24 @@ import multiprocessing
 from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QGridLayout, QPushButton, QTextEdit
 from PyQt5.QtGui import QTextCursor
 
-import viewer_constants
-import viewer_elements
+import gui.viewer_constants as vc
+import gui.viewer_elements as ve
 
 class SerialMonitorInterface(QWidget):
   
   def __init__(self):
     super().__init__()
     self.initUI()
-    self.output_mapping  = get_output_mapping(),
-    self.commands        = get_command_mapping(),
+    self.output_mapping  = vc.get_output_mapping()
+    self.commands        = vc.get_command_mapping()
     self.var_trackers    = dict({
-      voltage_in['label']:  get_var_tracker(VOLTAGE_IN,  voltage_in['unit']),
-      voltage_out['label']: get_var_tracker(VOLTAGE_OUT, voltage_out['unit']),
-      current_in['label']:  get_var_tracker(CURRENT_IN,  current_in['unit']),
-      current_out['label']: get_var_tracker(CURRENT_OUT, current_out['unit']),
-      power_in['label']:    get_var_tracker(POWER_IN,    power_in['unit']),
-      power_out['label']:   get_var_tracker(POWER_OUT,   power_out['unit']),
-      duty_cycle['label']:  get_var_tracker(DUTY_CYCLE,  duty_cycle['unit'])
+      vc.voltage_in['label']:  vc.get_var_tracker(vc.VOLTAGE_IN,  vc.voltage_in['unit']),
+      vc.voltage_out['label']: vc.get_var_tracker(vc.VOLTAGE_OUT, vc.voltage_out['unit']),
+      vc.current_in['label']:  vc.get_var_tracker(vc.CURRENT_IN,  vc.current_in['unit']),
+      vc.current_out['label']: vc.get_var_tracker(vc.CURRENT_OUT, vc.current_out['unit']),
+      vc.power_in['label']:    vc.get_var_tracker(vc.POWER_IN,    vc.power_in['unit']),
+      vc.power_out['label']:   vc.get_var_tracker(vc.POWER_OUT,   vc.power_out['unit']),
+      vc.duty_cycle['label']:  vc.get_var_tracker(vc.DUTY_CYCLE,  vc.duty_cycle['unit'])
     })
 
   def assignMonitor(self, serialMonitor):
@@ -42,7 +42,7 @@ class SerialMonitorInterface(QWidget):
     self.setLayout(layout)
     
     # Initialize Combobox
-    self.var_combo = get_var_combobox()
+    self.var_combo = ve.get_var_combobox()
     self.var_combo.currentTextChanged.connect(self.var_combo_changed)
     layout.addWidget(self.var_combo)
 
@@ -61,14 +61,9 @@ class SerialMonitorInterface(QWidget):
     layout.addWidget(request_button)
 
     # Initialize periodic poll button
-    periodicPollButton = QPushButton("Periodically poll board")
+    periodicPollButton = QPushButton("Monitor Board Value")
     periodicPollButton.clicked.connect(self.onPeriodicPollButtonClicked)
     layout.addWidget(periodicPollButton)
-
-    # Initialize stop monitoring button
-    stopMonitorButton = QPushButton("Stop monitoring")
-    stopMonitorButton.clicked.connect(self.onStopMonitorButtonClicked)
-    layout.addWidget(stopMonitorButton)
 
     # Initialize plot button
     plotButton = QPushButton("Plot data / Stop plotting")
@@ -85,7 +80,7 @@ class SerialMonitorInterface(QWidget):
     currAlgBtn.clicked.connect(self.onCurrAlgBtnClicked)
     layout.addWidget(currAlgBtn)
 
-    self.algo_combo = get_alg_combobox()
+    self.algo_combo = ve.get_alg_combobox()
     layout.addWidget(self.algo_combo)
 
     switchAlgBtn = QPushButton("Switch Algorithm")
@@ -100,7 +95,7 @@ class SerialMonitorInterface(QWidget):
   '''
   On trigger of combobox change
   '''
-  def combobox_changed(self):
+  def var_combo_changed(self):
     text = self.var_combo.currentText()
 
   '''
@@ -115,7 +110,6 @@ class SerialMonitorInterface(QWidget):
     sb.setValue(sb.maximum())
 
     try:
-      print(re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3])
       outputMap = self.output_mapping[re.sub(r"\s*[^A-Za-z]+\s*", " ", response.lstrip())[:-3]]
       self.var_trackers[outputMap]['time'].append(timestamp)
       self.var_trackers[outputMap]['vals'].append(int(re.sub('[^0-9]','', response)))
@@ -156,17 +150,15 @@ class SerialMonitorInterface(QWidget):
     self.sendAndReceive(text)
 
   def onPeriodicPollButtonClicked(self):
-    print("Poll pressed")
     text = self.var_combo.currentText()
-    self.var_trackers[text]['monitorActive'] = True
-    Thread(
-      target=self.periodicPoll,
-      args=[text, 3]
-    ).start()
+    if not self.var_trackers[text]['monitorActive']:
+      text = self.var_combo.currentText()
+      Thread(
+        target=self.periodicPoll,
+        args=[text, 3]
+      ).start()
 
-  def onStopMonitorButtonClicked(self):
-    text = self.var_combo.currentText()
-    self.var_trackers[text]['monitorActive'] = False
+    self.var_trackers[text]['monitorActive'] = not self.var_trackers[text]['monitorActive'] 
 
   def onCurrAlgBtnClicked(self):
     self.sendAndReceive("Current Algorithm")
@@ -202,12 +194,6 @@ class SerialMonitorInterface(QWidget):
         target=self.plotData,
         args=[text]
       ).start()
-      '''
-      multiprocessing.Process(
-        target=self.plotData,
-        args=[text]
-      ).start()
-      '''
     else:
       self.var_trackers[text]['plotActive'] = False
 
@@ -215,7 +201,6 @@ class SerialMonitorInterface(QWidget):
   Periodically request the power
   '''
   def periodicPoll(self, command, timeInterval):
-    print(self.var_trackers[command])
     while (self.var_trackers[command]['monitorActive']):
       time.sleep(timeInterval)
       self.sendAndReceive(command)
