@@ -1,20 +1,18 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys
-import time
 import datetime
 import re
-import matplotlib.pyplot as plot
-
+import time
 from threading import Thread
-import multiprocessing
 
-from PyQt5.QtWidgets import QApplication, QWidget, QComboBox, QGridLayout, QPushButton, QTextEdit
+import matplotlib.pyplot as plot
 from PyQt5.QtGui import QTextCursor
+from PyQt5.QtWidgets import (QApplication, QComboBox, QGridLayout, QPushButton,
+                             QTextEdit, QWidget)
 
 import gui.viewer_constants as vc
 import gui.viewer_elements as ve
+
 
 class SerialMonitorInterface(QWidget):
   
@@ -154,8 +152,8 @@ class SerialMonitorInterface(QWidget):
     if not self.var_trackers[text]['monitorActive']:
       text = self.var_combo.currentText()
       Thread(
-        target=self.periodicPoll,
-        args=[text, 3]
+          target=self.periodicPoll,
+          args=[text, 3]
       ).start()
 
     self.var_trackers[text]['monitorActive'] = not self.var_trackers[text]['monitorActive'] 

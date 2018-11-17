@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-import sys
 import re
-import serial
+import sys
 from threading import Lock
+
+import serial
+
 
 class SerialMonitor():
 
