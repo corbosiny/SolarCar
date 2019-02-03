@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 19)
+    (drawings 21)
     (tracks 689)
     (zones 0)
     (modules 83)
@@ -3442,7 +3442,7 @@
   (module "UTSVT_Connectors:43650-0202_01x02_Microfit 3.0_horizontal" (layer F.Cu) (tedit 5C55EC83) (tstamp 5C7A2449)
     (at 118.1735 70.612 180)
     (path /5C58671C)
-    (fp_text reference J5 (at 10.8585 -1.4605 180) (layer F.SilkS)
+    (fp_text reference J5 (at 10.795 -5.1435 180) (layer F.SilkS)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value Conn_01x02 (at 6 2.5 180) (layer F.Fab)
@@ -4214,6 +4214,12 @@
       (xy -3.770496 -5.687082) (xy -3.551303 -5.609675) (xy -3.473034 -5.588) (xy -3.408236 -5.646283)) (layer B.SilkS) (width 0.01))
   )
 
+  (gr_text +5V (at 120.9675 71.9455) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text GND (at 106.1085 71.9455) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
   (gr_text CS1 (at 122.4915 109.347) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
